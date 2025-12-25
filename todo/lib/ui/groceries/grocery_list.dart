@@ -10,7 +10,10 @@ class GroceryList extends StatefulWidget {
   State<GroceryList> createState() => _GroceryListState();
 }
 
+enum GroceryTab { groceriesTab, searchTab }
+
 class _GroceryListState extends State<GroceryList> {
+  GroceryTab _currentTab = GroceryTab.groceriesTab;
 
   void onCreate() async {
     // Navigate to the form screen using the Navigator push
@@ -33,8 +36,9 @@ class _GroceryListState extends State<GroceryList> {
       //  Display groceries with an Item builder and  LIst Tile
       content = ListView.builder(
         itemCount: dummyGroceryItems.length,
-        itemBuilder: (context, index) =>
-            GroceryTile(grocery: dummyGroceryItems[index]),
+        itemBuilder: (context, index) {
+          GroceryTile(grocery: dummyGroceryItems[index]);
+        },
       );
     }
 
@@ -43,7 +47,28 @@ class _GroceryListState extends State<GroceryList> {
         title: const Text('Your Groceries'),
         actions: [IconButton(onPressed: onCreate, icon: const Icon(Icons.add))],
       ),
-      body: content,
+      body: IndexedStack(
+        index: _currentTab.index, 
+        children: [
+          
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentTab.index,
+        selectedItemColor: Colors.red,
+        onTap: (index) {
+          setState(() {
+            _currentTab = GroceryTab.values[index];
+          });
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.local_grocery_store),
+            label: 'Groceries',
+          ),
+          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
+        ],
+      ),
     );
   }
 }
